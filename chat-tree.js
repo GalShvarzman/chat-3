@@ -1,5 +1,6 @@
 function ChatTree(element) {
     function load(items) {
+        this.clear();
         const tree = walkTree(items);
         for(let item of tree){
             element.appendChild(item);
@@ -12,7 +13,10 @@ function ChatTree(element) {
     function addKeyUpListener(element){
         element.addEventListener("keyup", (e)=>{
             const keyName = e.key;
-            if(keyName === "ArrowRight"){
+            if(e.target.className === "left tree"){
+                e.target.children[0].querySelector(":scope > a").focus();
+            }
+            else if(keyName === "ArrowRight"){
                 openChildren(e.target);
             }
             else if((keyName === "ArrowLeft")){
@@ -21,18 +25,38 @@ function ChatTree(element) {
             else if(keyName === "ArrowDown"){
                 walkDown(e.target);
             }
+            else if(keyName === "ArrowUp"){
+                walkUp(e.target);
+            }
         })
     }
 
     function walkDown(element){
-        if(element.nextElementSibling.style.display === "block"){debugger
-            element.nextElementSibling.children[0].child.toggleFocus();
+        if(element.nextElementSibling){
+            if(element.nextElementSibling.style.display === "block"){
+                element.nextElementSibling.querySelector(":scope  a").focus();
+            }
+            else{
+                element.parentElement.nextElementSibling.querySelector(":scope > a").focus();
+            }
         }
-        else{debugger
-            element.parentElement.nextElementSibling.child.focus();
+        else{
+            if(element.parentElement.nextElementSibling){
+                element.parentElement.nextElementSibling.querySelector(":scope > a").focus();
+            }
         }
-        element.blur();
-        debugger
+    }
+
+    function walkUp(element){
+        if(element.parentElement.previousElementSibling){
+            element.parentElement.previousElementSibling.querySelector(":scope > a").focus();
+        }
+        else if(element.parentElement.parentElement.className === "left tree"){
+            element.focus();
+        }
+        else{
+            element.parentElement.parentElement.parentElement.querySelector(":scope a").focus();
+        }
     }
 
     function openChildren(element){
@@ -44,8 +68,8 @@ function ChatTree(element) {
 
     function closeChildren(element){
         if(element.parentElement.parentElement && element.parentElement.parentElement.className !== "left tree"){
-            element.style.display = "none";
-
+            element.parentElement.parentElement.style.display = "none";
+            element.parentElement.parentElement.parentElement.querySelector(":scope a").focus();
         }
     }
 
@@ -70,26 +94,20 @@ function ChatTree(element) {
     }
 
     function toggleDisplay(element){
-        if (element.style.display !== "none") {
-            element.style.display = "none";
-        }
-        else {
-            element.style.display = "block";
+        if(element){
+            if (element.style.display !== "none") {
+                element.style.display = "none";
+            }
+            else {
+                element.style.display = "block";
+            }
         }
     }
 
-    function toggleFocus(element){debugger
+    function setFocus(element){
         if(document.activeElement === element){
             element.focus();
         }
-
-
-        // if(element.style.background === "rgb(244, 245, 245)"){
-        //     element.style.background = "#3995ff"
-        // }
-        // else{
-        //     element.style.background = "rgb(244, 245, 245)";
-        // }
     }
 
     function addDblClickListener(element){
@@ -101,7 +119,7 @@ function ChatTree(element) {
 
     function addClickListener(element){
         element.addEventListener("click", (e)=>{
-            toggleFocus(e.target);
+            setFocus(e.target);
             e.target.focus();
             e.stopPropagation();
         })
@@ -115,9 +133,8 @@ function ChatTree(element) {
         a.appendChild(name);
         if(item.type === "group"){
             a.style.cursor = "pointer";
-            a.style.color = "#016b42";
+            a.style.color = "#076b51";
         }
-        //a.style.background = "rgb(244, 245, 245)";
         li.appendChild(a);
         return li;
     }
@@ -127,6 +144,10 @@ function ChatTree(element) {
     }
 
     function clear() {
+        const treeChildren = document.getElementsByClassName("left tree")[0].children;
+        while(treeChildren.length){
+            treeChildren[0].remove();
+        }
     }
 
     return {
