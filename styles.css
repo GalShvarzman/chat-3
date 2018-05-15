@@ -1,0 +1,73 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    /*background: #f4f5f5;*/
+}
+
+.left {
+    width: 25%;
+    border-right: 1px solid darkslategrey;
+}
+
+.right {
+    width: 75%;
+    display: flex;
+    flex-direction: column;
+}
+
+.toolbar {
+    border-bottom: 1px solid darkslategrey;
+    padding: 0.5em;
+}
+
+.content {
+    height: 100%;
+    outline: none;
+}
+
+.tree {
+    padding: 0.5em;
+    margin: 0;
+    list-style: none;
+    outline: none;
+}
+
+.toolbar > button{
+    border: 1px solid lightcyan;
+    color: white;
+    background: darkslategrey;
+    padding: 6px 12px;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin:0
+}
+
+li{
+    padding-left:20px;
+
+}
+a{
+    display:block;
+    width:100%;
+
+}
+
+a:focus{
+    background-color: powderblue;
+    outline: none;
+}
+
+
+
+
+
