@@ -1,7 +1,8 @@
 function ChatTree(element) {
     function load(items) {
         this.clear();
-        const tree = walkTree(items);
+        const tree = walkTree(items, 0);
+
         for(let item of tree){
             element.appendChild(item);
         }
@@ -23,39 +24,51 @@ function ChatTree(element) {
                 closeChildren(e.target);
             }
             else if(keyName === "ArrowDown"){
-                walkDown(e.target);
+                getAllLi(e.target, keyName);
             }
             else if(keyName === "ArrowUp"){
-                walkUp(e.target);
+                getAllLi(e.target, keyName);
             }
         })
     }
 
-    function walkDown(element){
-        if(element.nextElementSibling){
-            if(element.nextElementSibling.style.display === "block"){
-                element.nextElementSibling.querySelector(":scope  a").focus();
-            }
-            else{
-                element.parentElement.nextElementSibling.querySelector(":scope > a").focus();
-            }
-        }
-        else{
-            if(element.parentElement.nextElementSibling){
-                element.parentElement.nextElementSibling.querySelector(":scope > a").focus();
-            }
-        }
-    }
+    function getAllLi(element, keyName){
+        const selectedLi = element.parentElement;
+        const allLi = document.querySelectorAll("li");
 
-    function walkUp(element){
-        if(element.parentElement.previousElementSibling){
-            element.parentElement.previousElementSibling.querySelector(":scope > a").focus();
+        function getDisplayedLi(){
+            const result = [];
+            for(let i = 0; i < allLi.length; i++){
+                if(allLi[i].offsetParent){
+                    result.push(allLi[i]);
+                }
+            }
+            return result;
         }
-        else if(element.parentElement.parentElement.className === "left tree"){
-            element.focus();
+        const displayedLi = getDisplayedLi();
+        function findIndex (){
+            let result;
+            for(let i = 0; i < displayedLi.length; i++){
+                if(displayedLi[i] === selectedLi){
+                    result = i;
+                }
+            }
+            return result;
         }
-        else{
-            element.parentElement.parentElement.parentElement.querySelector(":scope a").focus();
+        const index = findIndex();
+        if(index !== -1){
+            if(keyName === "ArrowDown"){
+                const nextLi=index+1;
+                if(nextLi < displayedLi.length){
+                    displayedLi[nextLi].querySelector(":scope>a").focus();
+                }
+            }
+            else if(keyName === "ArrowUp"){
+                const nextLi=index-1;
+                if(nextLi >= 0){
+                    displayedLi[nextLi].querySelector(":scope>a").focus();
+                }
+            }
         }
     }
 
@@ -68,18 +81,26 @@ function ChatTree(element) {
 
     function closeChildren(element){
         if(element.parentElement.parentElement && element.parentElement.parentElement.className !== "left tree"){
-            element.parentElement.parentElement.style.display = "none";
-            element.parentElement.parentElement.parentElement.querySelector(":scope a").focus();
+            if(element.nextElementSibling){
+                if(element.nextElementSibling.style.display === "none"){debugger
+                    element.parentElement.parentElement.parentElement.querySelector(":scope a").focus();
+                    element.style.display = "none";
+                }
+                else{
+                    element.nextElementSibling.style.display = "none";
+                    element.focus();
+                }
+            }
         }
     }
 
-    function walkTree(items){
+    function walkTree(items, step){
         const result = [];
         items.forEach((item)=>{
-            const li = createLi(item);
+            const li = createLi(item, step);
             if(item.items){
                 const ul = createUl();
-                walkTree(item.items).forEach((childItem)=>{
+                walkTree(item.items, step+1).forEach((childItem)=>{
                     ul.appendChild(childItem);
                 });
                 ul.style.display = 'none';
@@ -104,12 +125,6 @@ function ChatTree(element) {
         }
     }
 
-    function setFocus(element){
-        if(document.activeElement === element){
-            element.focus();
-        }
-    }
-
     function addDblClickListener(element){
         element.addEventListener("dblclick", (e)=>{
             toggleDisplay(e.target.nextElementSibling);
@@ -119,21 +134,33 @@ function ChatTree(element) {
 
     function addClickListener(element){
         element.addEventListener("click", (e)=>{
-            setFocus(e.target);
             e.target.focus();
             e.stopPropagation();
         })
     }
 
-    function createLi(item){
-        const name = document.createTextNode(item.name);
+    function padding(number){
+        let start = "";
+        let space = "&nbsp&nbsp";
+        for(let i = 0; i < number; i++){
+            start+=space;
+        }
+        return start;
+    }
+
+    function createLi(item, step){
         const li = document.createElement("li");
         const a = document.createElement("a");
         a.setAttribute("tabindex","1");
-        a.appendChild(name);
+        const space = padding(step);
         if(item.type === "group"){
+            a.innerHTML = space+"☺"+item.name;
             a.style.cursor = "pointer";
-            a.style.color = "#076b51";
+            a.style.color = "#113f6b";
+        }
+        else{
+            a.innerHTML = space+item.name;
+            a.style.color = "#006cbe";
         }
         li.appendChild(a);
         return li;
