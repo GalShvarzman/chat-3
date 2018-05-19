@@ -1,3 +1,7 @@
+*{
+    font-family: 'Aclonica',Monaco, monospace;;
+}
+
 html, body {
     margin: 0;
     padding: 0;
@@ -6,12 +10,12 @@ html, body {
     box-sizing: border-box;
     display: flex;
     flex-direction: row;
-    font-family: 'Aclonica';
 }
 
 .left {
     width: 25%;
-    border-right: 1px solid darkslategrey;
+    border-right: 2px solid #006cbe;
+    overflow: auto;
 }
 
 .right {
@@ -21,7 +25,7 @@ html, body {
 }
 
 .toolbar {
-    border-bottom: 1px solid darkslategrey;
+    border-bottom: 2px solid #006cbe;
     padding: 0.5em;
 }
 
@@ -38,10 +42,10 @@ html, body {
 }
 
 .toolbar > button{
-    border: 1px solid lightcyan;
     color: white;
-    background: darkslategrey;
+    background: #006cbe;
     padding: 6px 12px;
+    border: transparent;
     border-radius: 5px;
     font-size: 1.2em;
 }
@@ -53,7 +57,7 @@ ul {
 }
 
 li{
-    margin: 0.2em 0;
+    margin: 0.4em 0;
 }
 a{
     display:block;
@@ -72,6 +76,8 @@ a:focus{
     outline: none;
 }
 
-
+textarea.content{
+    background-color: #fafef6;
+}
 
 
