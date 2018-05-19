@@ -30,7 +30,16 @@ function ChatTree(element) {
             else if(keyName === "ArrowDown" || keyName === "ArrowUp"){
                 getAllLi(e.target, keyName);
             }
+            else if(keyName === "Enter"){
+                toggleExpandOrCollapse(e.target)
+            }
         })
+    }
+
+    function toggleExpandOrCollapse(element) {
+        if(element.nextElementSibling){
+            toggleDisplay(element.nextElementSibling);
+        }
     }
 
     function getAllLi(element, keyName){
