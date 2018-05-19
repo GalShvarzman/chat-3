@@ -6,6 +6,10 @@ function ChatTree(element) {
         for(let item of tree){
             element.appendChild(item);
         }
+        addEventListenersToList(element);
+    }
+
+    function addEventListenersToList(){
         addClickListener(element);
         addDblClickListener(element);
         addKeyUpListener(element);
@@ -23,10 +27,7 @@ function ChatTree(element) {
             else if((keyName === "ArrowLeft")){
                 closeChildren(e.target);
             }
-            else if(keyName === "ArrowDown"){
-                getAllLi(e.target, keyName);
-            }
-            else if(keyName === "ArrowUp"){
+            else if(keyName === "ArrowDown" || keyName === "ArrowUp"){
                 getAllLi(e.target, keyName);
             }
         })
@@ -80,15 +81,13 @@ function ChatTree(element) {
     }
 
     function closeChildren(element){
-        if(element.parentElement.parentElement && element.parentElement.parentElement.className !== "left tree"){
+        if(element.parentElement.parentElement){
             if(element.nextElementSibling){
-                if(element.nextElementSibling.style.display === "none"){debugger
-                    element.parentElement.parentElement.parentElement.querySelector(":scope a").focus();
-                    element.style.display = "none";
+                if(element.nextElementSibling.style.display === "block"){
+                    element.nextElementSibling.style.display = "none";
                 }
                 else{
-                    element.nextElementSibling.style.display = "none";
-                    element.focus();
+                    element.parentElement.parentElement.parentElement.querySelector(":scope a").focus();
                 }
             }
         }
