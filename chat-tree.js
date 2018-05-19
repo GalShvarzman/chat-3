@@ -1,11 +1,14 @@
 function ChatTree(element) {
     function load(items) {
-        this.clear();
+        element.remove();
+        if(element.children.length){
+            removeChildren(element);
+        }
         const tree = walkTree(items, 0);
-
         for(let item of tree){
             element.appendChild(item);
         }
+        document.body.insertBefore(element,document.body.firstChild);
         addEventListenersToList(element);
     }
 
@@ -178,10 +181,18 @@ function ChatTree(element) {
         return document.createElement("ul");
     }
 
+    function removeChildren(element){
+        let length = element.children.length;
+        while(length > 0){
+            element.children[--length].remove();
+        }
+    }
+
     function clear() {
-        const treeChildren = document.getElementsByClassName("left tree")[0].children;
-        while(treeChildren.length){
-            treeChildren[0].remove();
+        if(element.children.length){
+            element.remove();
+            removeChildren(element);
+            document.body.insertBefore(element,document.body.firstChild);
         }
     }
 
